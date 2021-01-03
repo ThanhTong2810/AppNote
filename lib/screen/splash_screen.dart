@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:app_note/controller/note_controller.dart';
 import 'package:app_note/controller/user_controller.dart';
 import 'package:app_note/helper/shared_preferences_helper.dart';
 import 'package:app_note/model/user.dart';

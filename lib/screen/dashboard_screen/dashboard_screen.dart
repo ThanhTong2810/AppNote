@@ -1,7 +1,11 @@
+import 'package:app_note/controller/note_controller.dart';
+import 'package:app_note/controller/user_controller.dart';
+import 'package:app_note/theme/colors.dart';
 import 'package:app_note/theme/dimens.dart';
 import 'package:app_note/widget/animate_menu.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 
 final Screen myDashBoardScreen =  Screen(
@@ -16,7 +20,15 @@ class DashBoardScreen extends StatefulWidget {
 }
 
 class _DashBoardScreenState extends State<DashBoardScreen> {
+  final NoteController noteController=Get.find();
+  final UserController userController=Get.find();
   int touchedIndex;
+
+  @override
+  void initState() {
+    noteController.getNote(userController.user.value);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,24 +73,24 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: const <Widget>[
                     Indicator(
-                      color: Color(0xff0293ee),
-                      text: 'First',
+                      color: AppColors.clickableText,
+                      text: 'Done',
                       isSquare: true,
                     ),
                     SizedBox(
                       height: 4,
                     ),
                     Indicator(
-                      color: Color(0xfff8b250),
-                      text: 'Second',
+                      color: AppColors.yellow,
+                      text: 'Processing',
                       isSquare: true,
                     ),
                     SizedBox(
                       height: 4,
                     ),
                     Indicator(
-                      color: Color(0xff845bef),
-                      text: 'Third',
+                      color: AppColors.red,
+                      text: 'Pending',
                       isSquare: true,
                     ),
                     SizedBox(
@@ -105,27 +117,27 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       switch (i) {
         case 0:
           return PieChartSectionData(
-            color: const Color(0xff0293ee),
-            value: 40,
-            title: '40%',
+            color: AppColors.clickableText,
+            value: ((noteController.doneLength.value/noteController.listNotes.length)*100).roundToDouble(),
+            title: '${((noteController.doneLength.value/noteController.listNotes.length)*100).roundToDouble()}%',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
           );
         case 1:
           return PieChartSectionData(
-            color: const Color(0xfff8b250),
-            value: 30,
-            title: '30%',
+            color: AppColors.yellow,
+            value: ((noteController.processingLength.value/noteController.listNotes.length)*100).roundToDouble(),
+            title: '${((noteController.processingLength.value/noteController.listNotes.length)*100).roundToDouble()}%',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
           );
         case 2:
           return PieChartSectionData(
-            color: const Color(0xff845bef),
-            value: 30,
-            title: '30%',
+            color: AppColors.red,
+            value: ((noteController.pendingLength.value/noteController.listNotes.length)*100).roundToDouble(),
+            title: '${((noteController.pendingLength.value/noteController.listNotes.length)*100).roundToDouble()}%',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),

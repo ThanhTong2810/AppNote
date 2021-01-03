@@ -6,45 +6,88 @@ import 'package:app_note/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
-class NoteController extends GetxController{
-  Rx<String> currentCategory=Rx<String>('');
-  Rx<String> currentPriority=Rx<String>('');
-  Rx<String> currentStatus=Rx<String>('');
+class NoteController extends GetxController {
+  Rx<String> currentCategory = Rx<String>('');
+  Rx<String> currentPriority = Rx<String>('');
+  Rx<String> currentStatus = Rx<String>('');
 
-  Rx<DateTime> pickedDate=Rx<DateTime>();
+  Rx<DateTime> pickedDate = Rx<DateTime>();
 
-  Rx<bool> isShowLoading=Rx<bool>(false);
-  Rx<bool> isUpdate=Rx<bool>(false);
+  Rx<bool> isShowLoading = Rx<bool>(false);
+  Rx<bool> isUpdate = Rx<bool>(false);
 
-  RxList<Note> listNotes=RxList<Note>([]);
+  RxList<Note> listNotes = RxList<Note>([]);
+  Rx<int> doneLength=Rx<int>(0);
+  Rx<int> pendingLength=Rx<int>(0);
+  Rx<int> processingLength=Rx<int>(0);
 
-  getAllNotes(UserApp user) async{
-    isShowLoading.value=true;
-    QuerySnapshot snapshot=await FirebaseHelper.fireStoreReference.collection(Constants.USER_COLLECTION).doc(user.phoneNumber).collection(Constants.NOTES).get();
-    for(var notes in snapshot.docs){
-      var note=Note.fromJson(notes.data());
-      listNotes.add(note);
-    }
-    isShowLoading.value=false;
+  Stream<List<Note>> getAllNotes(UserApp user) {
+    return FirebaseHelper.fireStoreReference
+        .collection(Constants.USER_COLLECTION)
+        .doc(user.phoneNumber)
+        .collection(Constants.NOTES)
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Note.fromJson(doc.data())).toList());
   }
 
-  addNote(String name, String category, String priority, String status, DateTime planDate,UserApp user) async{
-    isShowLoading.value=true;
+  addNote(String name, String category, String priority, String status,
+      DateTime planDate, UserApp user) async {
+    isShowLoading.value = true;
     String noteId;
-    var noteData={
-      'name':name??'',
-      'category':category,
-      'priority':priority,
-      'status':status,
-      'planDate':formatDate(planDate),
-      'createdDate':formatDate(DateTime.now()),
+    var noteData = {
+      'name': name ?? '',
+      'category': category,
+      'priority': priority,
+      'status': status,
+      'planDate': formatDate(planDate),
+      'createdDate': formatDate(DateTime.now()),
     };
-    await FirebaseHelper.fireStoreReference.collection(Constants.USER_COLLECTION).doc(user.phoneNumber).collection(Constants.NOTES).add(noteData).then((value) => noteId=value.id);
-    await FirebaseHelper.fireStoreReference.collection(Constants.USER_COLLECTION).doc(user.phoneNumber).collection(Constants.NOTES).doc(noteId).update({'id': noteId.trim()});
-    isShowLoading.value=false;
+    await FirebaseHelper.fireStoreReference
+        .collection(Constants.USER_COLLECTION)
+        .doc(user.phoneNumber)
+        .collection(Constants.NOTES)
+        .add(noteData)
+        .then((value) => noteId = value.id);
+    await FirebaseHelper.fireStoreReference
+        .collection(Constants.USER_COLLECTION)
+        .doc(user.phoneNumber)
+        .collection(Constants.NOTES)
+        .doc(noteId)
+        .update({'id': noteId.trim()});
+    listNotes.add(Note.fromJson(noteData));
+    isShowLoading.value = false;
   }
 
-  deleteNote(UserApp user,String id) async{
-    await FirebaseHelper.fireStoreReference.collection(Constants.USER_COLLECTION).doc(user.phoneNumber).collection(Constants.NOTES).doc(id).delete();
+  updateNote(UserApp user, String id,Map<String, dynamic>data) async{
+    isShowLoading.value = true;
+    await FirebaseHelper.fireStoreReference
+        .collection(Constants.USER_COLLECTION)
+        .doc(user.phoneNumber)
+        .collection(Constants.NOTES)
+        .doc(id).update(data);
+    isShowLoading.value = false;
+  }
+
+  deleteNote(UserApp user, String id) async {
+    isShowLoading.value = true;
+    await FirebaseHelper.fireStoreReference
+        .collection(Constants.USER_COLLECTION)
+        .doc(user.phoneNumber)
+        .collection(Constants.NOTES)
+        .doc(id)
+        .delete();
+    isShowLoading.value = false;
+  }
+
+  getNote(UserApp user) async{
+    QuerySnapshot snapshot=await FirebaseHelper.fireStoreReference
+        .collection(Constants.USER_COLLECTION)
+        .doc(user.phoneNumber)
+        .collection(Constants.NOTES).get();
+    listNotes=RxList<Note>(snapshot.docs.map((e) => Note.fromJson(e.data())).toList());
+    doneLength.value=listNotes.where((e) => e.status=='Done').toList().length;
+    pendingLength.value=listNotes.where((e) => e.status=='Pending').toList().length;
+    processingLength.value=listNotes.where((e) => e.status=='Processing').toList().length;
   }
 }

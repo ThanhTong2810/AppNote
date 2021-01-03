@@ -78,7 +78,7 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
           maxWidth: double.infinity,
           alignment: Alignment.topLeft,
           child: Container(
-            padding: const EdgeInsets.all(50.0),
+            padding: const EdgeInsets.only(left:50.0, right: 50.0,top: 90),
             child: Column(
               children: <Widget>[
                 GestureDetector(
@@ -87,8 +87,8 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
                   },
                   child: Container(
                     child: SizedBox(
-                      height: getScreenHeight(context) / 8,
-                      width:getScreenHeight(context) / 8 ,
+                      height: getScreenHeight(context) / 10,
+                      width:getScreenHeight(context) / 10,
                       child: CachedNetworkImage(
                         width: getScreenWidth(context),
                         fit: BoxFit.fitWidth,

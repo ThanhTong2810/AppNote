@@ -62,5 +62,9 @@
     <string>724977724888786</string>
     <key>FacebookDisplayName</key>
     <string>AppNote</string>
+    <key>NSCameraUsageDescription</key>
+    <string>To take customers' picture for better serves</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>To upload avatar</string>
 </dict>
 </plist>

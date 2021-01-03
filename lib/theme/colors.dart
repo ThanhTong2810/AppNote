@@ -5,6 +5,7 @@ class AppColors {
   static const white = Colors.white;
   static const hintText = Color(0x4d000000);
   static const clickableText = Color(0xff709ae7);
+  static const yellow = Colors.amber;
   static const selectedMenu = Color(0xFFFF6F00);
   static const divider = Color(0xff707070);
   static const black = Colors.black;
