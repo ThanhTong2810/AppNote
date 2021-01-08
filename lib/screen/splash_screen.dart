@@ -6,7 +6,6 @@ import 'package:app_note/controller/user_controller.dart';
 import 'package:app_note/helper/shared_preferences_helper.dart';
 import 'package:app_note/model/user.dart';
 import 'package:app_note/res/images/images.dart';
-import 'package:app_note/screen/main_screen/main_screen.dart';
 import 'package:app_note/screen/menu_screen/menu_screen.dart';
 import 'package:app_note/theme/colors.dart';
 import 'package:app_note/utils/utils.dart';

@@ -1,7 +1,5 @@
-import 'dart:io';
 import 'package:app_note/controller/user_controller.dart';
 import 'package:app_note/localization/flutter_localizations.dart';
-import 'package:app_note/screen/main_screen/main_screen.dart';
 import 'package:app_note/screen/menu_screen/menu_screen.dart';
 import 'package:app_note/theme/colors.dart';
 import 'package:app_note/theme/dimens.dart';
@@ -17,7 +15,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 class CollectCustomerInformationScreen extends StatefulWidget {
   final phoneNumber;
@@ -174,6 +171,7 @@ class _CollectCustomerInformationScreenState
           confirm: () async {
             await userController.createNewUser(
                 displayName: nameController.text ?? '',
+                // ignore: deprecated_member_use
                 phoneNumber: userController.firebaseUser.isNullOrBlank?addCountryCode(widget.phoneNumber):userController.firebaseUser.phoneNumber.trim(),
                 isVerifyPhone: widget.isVerifyPhone);
           });

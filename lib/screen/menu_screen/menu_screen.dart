@@ -2,7 +2,6 @@ import 'package:app_note/constants/constants.dart';
 import 'package:app_note/screen/category_screen/category_screen.dart';
 import 'package:app_note/screen/dashboard_screen/dashboard_screen.dart';
 import 'package:app_note/screen/main_screen/main_screen.dart';
-import 'package:app_note/screen/setting_screen/setting_screen.dart';
 import 'package:app_note/widget/animate_menu.dart';
 import 'package:app_note/widget/menu.dart';
 import 'package:flutter/material.dart';

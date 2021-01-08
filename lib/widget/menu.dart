@@ -1,5 +1,4 @@
 import 'package:app_note/controller/user_controller.dart';
-import 'package:app_note/localization/flutter_localizations.dart';
 import 'package:app_note/screen/setting_screen/setting_screen.dart';
 import 'package:app_note/theme/colors.dart';
 import 'package:app_note/theme/dimens.dart';
@@ -77,41 +76,43 @@ class _MenuScreenState extends State<MenuScreen> with TickerProviderStateMixin {
         child: OverflowBox(
           maxWidth: double.infinity,
           alignment: Alignment.topLeft,
-          child: Container(
-            padding: const EdgeInsets.only(left:50.0, right: 50.0,top: 90),
-            child: Column(
-              children: <Widget>[
-                GestureDetector(
-                  onTap: () {
-                    _navigateToSettingsScreen();
-                  },
-                  child: Container(
-                    child: SizedBox(
-                      height: getScreenHeight(context) / 10,
-                      width:getScreenHeight(context) / 10,
-                      child: CachedNetworkImage(
-                        width: getScreenWidth(context),
-                        fit: BoxFit.fitWidth,
-                        imageUrl: userController.user.value.imgURL ?? '',
-                        imageBuilder: (context, imageProvider) => CircleAvatar(
-                          backgroundImage: imageProvider,
+          child: Obx((){
+            return Container(
+              padding: const EdgeInsets.only(left:50.0, right: 50.0,top: 90),
+              child: Column(
+                children: <Widget>[
+                  GestureDetector(
+                    onTap: () {
+                      _navigateToSettingsScreen();
+                    },
+                    child: Container(
+                      child: SizedBox(
+                        height: getScreenHeight(context) / 10,
+                        width:getScreenHeight(context) / 10,
+                        child: CachedNetworkImage(
+                          width: getScreenWidth(context),
+                          fit: BoxFit.fitWidth,
+                          imageUrl: userController.user.value.imgURL ?? '',
+                          imageBuilder: (context, imageProvider) => CircleAvatar(
+                            backgroundImage: imageProvider,
+                          ),
+                          placeholder: (context, url) => Shimmer.fromColors(
+                              baseColor: Colors.grey[400],
+                              highlightColor: Colors.white,
+                              child: CircleAvatar(
+                                backgroundColor: Colors.transparent,
+                              )),
+                          errorWidget: (context, url, error) => Icon(Icons.person),
                         ),
-                        placeholder: (context, url) => Shimmer.fromColors(
-                            baseColor: Colors.grey[400],
-                            highlightColor: Colors.white,
-                            child: CircleAvatar(
-                              backgroundColor: Colors.transparent,
-                            )),
-                        errorWidget: (context, url, error) => Icon(Icons.person),
                       ),
                     ),
                   ),
-                ),
-                Dimens.height10,
-                AppText(text: userController.user.value.displayName??'',color: AppColors.white,)
-              ],
-            ),
-          ),
+                  Dimens.height10,
+                  AppText(text: userController.user.value.displayName??'',color: AppColors.white,)
+                ],
+              ),
+            );
+          }),
         ),
         builder: (BuildContext context, Widget child) {
           return Transform(

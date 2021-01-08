@@ -2,7 +2,6 @@
 import 'package:app_note/controller/user_controller.dart';
 import 'package:app_note/localization/flutter_localizations.dart';
 import 'package:app_note/screen/login_screen/collect_customer_information.dart';
-import 'package:app_note/screen/main_screen/main_screen.dart';
 import 'package:app_note/screen/menu_screen/menu_screen.dart';
 import 'package:app_note/theme/colors.dart';
 import 'package:app_note/theme/dimens.dart';

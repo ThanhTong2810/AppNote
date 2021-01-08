@@ -1,7 +1,6 @@
 import 'package:app_note/constants/constants.dart';
 import 'package:app_note/helper/firebase_helper.dart';
 import 'package:app_note/model/category.dart';
-import 'package:app_note/model/user.dart';
 import 'package:app_note/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';

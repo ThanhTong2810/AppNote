@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:app_note/auth/auth_helper.dart';
 import 'package:app_note/constants/constants.dart';
 import 'package:app_note/controller/user_controller.dart';

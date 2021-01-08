@@ -8,7 +8,6 @@ import 'package:app_note/helper/shared_preferences_helper.dart';
 import 'package:app_note/model/user.dart';
 import 'package:app_note/screen/login_screen/input_phone_number.dart';
 import 'package:app_note/screen/login_screen/login_screen.dart';
-import 'package:app_note/screen/main_screen/main_screen.dart';
 import 'package:app_note/screen/menu_screen/menu_screen.dart';
 import 'package:app_note/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -156,6 +155,12 @@ class UserController extends GetxController{
     await loadUserData(phoneNumber);
     onCreateUserSuccess();
     isShowLoading.value = false;
+  }
+
+  updateUserName(Map<String,dynamic> data) async{
+    await FirebaseHelper.fireStoreReference
+        .collection(Constants.USER_COLLECTION)
+        .doc(user.value.phoneNumber).update(data);
   }
 
   loadUserData(String uid) async {

@@ -4,7 +4,6 @@ import 'package:app_note/controller/note_controller.dart';
 import 'package:app_note/controller/user_controller.dart';
 import 'package:app_note/localization/flutter_localizations_delegate.dart';
 import 'package:app_note/router/routes.dart';
-import 'package:app_note/screen/login_screen/input_phone_number.dart';
 import 'package:app_note/screen/splash_screen.dart';
 import 'package:app_note/theme/colors.dart';
 import 'package:app_note/theme/fonts.dart';

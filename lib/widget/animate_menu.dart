@@ -1,6 +1,4 @@
 import 'package:app_note/theme/colors.dart';
-import 'package:app_note/theme/dimens.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class ZoomScaffold extends StatefulWidget {
@@ -180,6 +178,7 @@ class ZoomScaffoldMenuControllerState
 
   getMenuController(BuildContext context) {
     final scaffoldState =
+        // ignore: deprecated_member_use
         context.ancestorStateOfType(new TypeMatcher<_ZoomScaffoldState>())
             as _ZoomScaffoldState;
     return scaffoldState.menuController;
