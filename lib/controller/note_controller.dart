@@ -4,12 +4,17 @@ import 'package:app_note/model/note.dart';
 import 'package:app_note/model/user.dart';
 import 'package:app_note/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class NoteController extends GetxController {
   Rx<String> currentCategory = Rx<String>('');
   Rx<String> currentPriority = Rx<String>('');
   Rx<String> currentStatus = Rx<String>('');
+
+  RxList<DropdownMenuItem<String>> dropDownCategory=RxList<DropdownMenuItem<String>>([]);
+  RxList<DropdownMenuItem<String>> dropDownPriority=RxList<DropdownMenuItem<String>>([]);
+  RxList<DropdownMenuItem<String>> dropDownStatus=RxList<DropdownMenuItem<String>>([]);
 
   Rx<DateTime> pickedDate = Rx<DateTime>();
 
@@ -20,6 +25,14 @@ class NoteController extends GetxController {
   Rx<int> doneLength=Rx<int>(0);
   Rx<int> pendingLength=Rx<int>(0);
   Rx<int> processingLength=Rx<int>(0);
+
+  List<DropdownMenuItem<String>> getDropDown(List<String> list) {
+    List<DropdownMenuItem<String>> items = new List();
+    for (String item in list) {
+      items.add(new DropdownMenuItem(value: item, child: new Text(item)));
+    }
+    return items;
+  }
 
   Stream<List<Note>> getAllNotes(UserApp user) {
     return FirebaseHelper.fireStoreReference

@@ -4,10 +4,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesHelper {
   static const String USER = 'user';
-  static const String SERVICE_VERSION = 'service_version';
-  static const String PRODUCT_VERSION = 'product_version';
-  static const String SERVICE_DATA = 'service_data';
-  static const String PRODUCT_DATA = 'product_data';
 
   static saveStringValue(String key, String value) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();

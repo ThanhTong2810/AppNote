@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:app_note/controller/category_controller.dart';
 import 'package:app_note/controller/note_controller.dart';
 import 'package:app_note/controller/user_controller.dart';
 import 'package:app_note/helper/shared_preferences_helper.dart';
@@ -23,7 +24,13 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin{
   final UserController userController=Get.find();
+  final CategoryController categoryController=Get.find();
+  final NoteController noteController=Get.find();
+
   Timer timer;
+  List<String> category;
+  List<String> priority = ['Slow', 'Medium', 'High'];
+  List<String> status = ['Processing', 'Done', 'Pending'];
 
   ///~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~///
   ///           OVERRIDE METHODS           ///
@@ -67,11 +74,22 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   ///             OTHER METHODS            ///
   ///~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~///
   onBuildDone() async {
+    await categoryController.getCategory();
+    category= categoryController.listCategories.map((e) => e.name).toList();
+
+    noteController.dropDownCategory = RxList<DropdownMenuItem<String>>(noteController.getDropDown(category));
+    noteController.dropDownPriority = RxList<DropdownMenuItem<String>>(noteController.getDropDown(priority));
+    noteController.dropDownStatus = RxList<DropdownMenuItem<String>>(noteController.getDropDown(status));
+
+    noteController.currentCategory.value = noteController.dropDownCategory[0].value;
+    noteController.currentPriority.value = noteController.dropDownPriority[0].value;
+    noteController.currentStatus.value = noteController.dropDownStatus[0].value;
     /// Delay 3 seconds, then navigate to Login screen
 
     timer=Timer.periodic(Duration(seconds: 2), (timer) async {
       await _loadUserData();
-      if (userController.user.value==null) {
+      // ignore: deprecated_member_use
+      if (userController.user.value.isNullOrBlank) {
         _navigateToLoginScreen();
       } else {
         _navigateToMainScreen();

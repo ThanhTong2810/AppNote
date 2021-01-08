@@ -1,4 +1,5 @@
 import 'package:app_note/constants/constants.dart';
+import 'package:app_note/screen/category_screen/category_screen.dart';
 import 'package:app_note/screen/dashboard_screen/dashboard_screen.dart';
 import 'package:app_note/screen/main_screen/main_screen.dart';
 import 'package:app_note/screen/setting_screen/setting_screen.dart';
@@ -24,6 +25,10 @@ class _MenuMainScreenState extends State<MenuMainScreen> {
       MenuItem(
         id: Constants.MY_DASH_BOARD_ID,
         title: 'Dash Board',
+      ),
+      MenuItem(
+        id: Constants.MY_CATEGORY_SCREEN_ID,
+        title: 'Categories',
       ),
     ],
   );
@@ -61,12 +66,15 @@ class _MenuMainScreenState extends State<MenuMainScreen> {
               case Constants.MY_DASH_BOARD_ID:
                 selectedMenuItemId.value = Constants.MY_DASH_BOARD_ID;
                 break;
+              case Constants.MY_CATEGORY_SCREEN_ID:
+                selectedMenuItemId.value = Constants.MY_CATEGORY_SCREEN_ID;
+                break;
               default:
 
             }
           },
         ),
-        contentScreens: [myMainScreen,myDashBoardScreen],
+        contentScreens: [myMainScreen,myDashBoardScreen,myCategoryScreen],
         screenSelected: selectedMenuItemId.value,
       );
     });

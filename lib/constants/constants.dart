@@ -4,9 +4,11 @@ class Constants {
 
   static const int MY_MAIN_SCREEN_ID = 0;
   static const int MY_DASH_BOARD_ID = 1;
+  static const int MY_CATEGORY_SCREEN_ID = 2;
 
   ///Firestore
   static const String USER_COLLECTION = 'USERS';
+  static const String CATEGORY = 'CATEGORY';
   static const String NOTES = 'NOTES';
 
 

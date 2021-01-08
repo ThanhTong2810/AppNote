@@ -1,5 +1,6 @@
 import 'package:app_note/auth/auth_helper.dart';
 import 'package:app_note/constants/constants.dart';
+import 'package:app_note/controller/category_controller.dart';
 import 'package:app_note/controller/note_controller.dart';
 import 'package:app_note/controller/user_controller.dart';
 import 'package:app_note/localization/flutter_localizations.dart';
@@ -31,25 +32,11 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   final UserController userController = Get.find();
   final NoteController noteController = Get.find();
+  final CategoryController categoryController=Get.find();
+
   int length=0;
 
   TextEditingController nameTextEditingController = new TextEditingController();
-
-  List<String> category = ['Working', 'Study', 'Relax'];
-  List<String> priority = ['Slow', 'Medium', 'High'];
-  List<String> status = ['Processing', 'Done', 'Pending'];
-
-  List<DropdownMenuItem<String>> _dropDownCategory;
-  List<DropdownMenuItem<String>> _dropDownPriority;
-  List<DropdownMenuItem<String>> _dropDownStatus;
-
-  List<DropdownMenuItem<String>> getDropDown(List<String> list) {
-    List<DropdownMenuItem<String>> items = new List();
-    for (String item in list) {
-      items.add(new DropdownMenuItem(value: item, child: new Text(item)));
-    }
-    return items;
-  }
 
   @override
   void initState() {
@@ -59,14 +46,6 @@ class _MainScreenState extends State<MainScreen> {
     AuthHelper.onNewUser = _onNavigateToCollectInformationScreen;
     AuthHelper.showAutoVerify = _showDialogAutoVerify;
     super.initState();
-
-    _dropDownCategory = getDropDown(category);
-    _dropDownPriority = getDropDown(priority);
-    _dropDownStatus = getDropDown(status);
-
-    noteController.currentCategory.value = _dropDownCategory[0].value;
-    noteController.currentPriority.value = _dropDownPriority[0].value;
-    noteController.currentStatus.value = _dropDownStatus[0].value;
   }
 
   @override
@@ -149,6 +128,7 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ),
           floatingActionButton: FloatingActionButton(
+            heroTag: null,
             child: Icon(Icons.add),
             backgroundColor: AppColors.primary,
             onPressed: () {
@@ -156,11 +136,11 @@ class _MainScreenState extends State<MainScreen> {
               nameTextEditingController.text='';
               nameTextEditingController.text = '';
               noteController.currentCategory.value =
-                  _dropDownCategory[0].value;
+                  noteController.dropDownCategory[0].value;
               noteController.currentPriority.value =
-                  _dropDownPriority[0].value;
+                  noteController.dropDownPriority[0].value;
               noteController.currentStatus.value =
-                  _dropDownStatus[0].value;
+                  noteController.dropDownStatus[0].value;
               noteController.pickedDate.value = null;
               _addNoteModalBottomSheet(context);
             },
@@ -175,6 +155,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget _buildCardVerifyPhone() {
     return userController.user.value != null
         ? userController.user.value.isVerifyPhone == false ||
+                // ignore: deprecated_member_use
                 userController.user.value.isVerifyPhone.isNullOrBlank
             ? Card(
                 color: AppColors.white,
@@ -302,7 +283,7 @@ class _MainScreenState extends State<MainScreen> {
                           trailing: DropdownButton(
                             hint: AppText(text: 'Select category'),
                             value: noteController.currentCategory.value,
-                            items: _dropDownCategory,
+                            items: noteController.dropDownCategory,
                             onChanged: (selectedCategory) {
                               noteController.currentCategory.value =
                                   selectedCategory.toString();
@@ -314,7 +295,7 @@ class _MainScreenState extends State<MainScreen> {
                           trailing: DropdownButton(
                             hint: AppText(text: 'Select priority'),
                             value: noteController.currentPriority.value,
-                            items: _dropDownPriority,
+                            items: noteController.dropDownPriority,
                             onChanged: (selectedPriority) {
                               noteController.currentPriority.value =
                                   selectedPriority.toString();
@@ -326,7 +307,7 @@ class _MainScreenState extends State<MainScreen> {
                           trailing: DropdownButton(
                             hint: AppText(text: 'Select status'),
                             value: noteController.currentStatus.value,
-                            items: _dropDownStatus,
+                            items: noteController.dropDownStatus,
                             onChanged: (selectedStatus) {
                               noteController.currentStatus.value =
                                   selectedStatus.toString();
@@ -375,11 +356,11 @@ class _MainScreenState extends State<MainScreen> {
 
                                         nameTextEditingController.text = '';
                                         noteController.currentCategory.value =
-                                            _dropDownCategory[0].value;
+                                            noteController.dropDownCategory[0].value;
                                         noteController.currentPriority.value =
-                                            _dropDownPriority[0].value;
+                                            noteController.dropDownPriority[0].value;
                                         noteController.currentStatus.value =
-                                            _dropDownStatus[0].value;
+                                            noteController.dropDownStatus[0].value;
                                         noteController.pickedDate.value = null;
                                       }
                                     : () async{

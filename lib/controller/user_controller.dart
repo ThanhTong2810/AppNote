@@ -145,6 +145,7 @@ class UserController extends GetxController{
         .collection(Constants.USER_COLLECTION)
         .doc(phoneNumber)
         .set({
+      // ignore: deprecated_member_use
       "email": googleSignIn.currentUser.isNullOrBlank?'':googleSignIn.currentUser.email,
       "facebookId":facebookUser==null?'':facebookUser['id'],
       "displayName": displayName ?? '',
@@ -165,7 +166,7 @@ class UserController extends GetxController{
           .doc(uid)
           .get();
       user.value = UserApp.fromJson(doc.data());
-      _saveUserData(jsonEncode(user.value.toJson()));
+      await _saveUserData(jsonEncode(user.value.toJson()));
     } catch (e) {}
     isShowLoading.value = false;
   }
@@ -245,6 +246,7 @@ class UserController extends GetxController{
     try{
       isShowLoading.value=true;
       final googleSignInAccount =await googleSignIn.signIn();
+      // ignore: deprecated_member_use
       if(googleSignIn.currentUser.isNullOrBlank){
         isShowLoading.value=false;
         return false;

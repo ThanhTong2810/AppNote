@@ -1,4 +1,5 @@
 import 'package:app_note/controller/app_controller.dart';
+import 'package:app_note/controller/category_controller.dart';
 import 'package:app_note/controller/note_controller.dart';
 import 'package:app_note/controller/user_controller.dart';
 import 'package:app_note/localization/flutter_localizations_delegate.dart';
@@ -38,6 +39,7 @@ class _AppState extends State<LetDoItApp> {
             initialBinding: BindingsBuilder(() {
               Get.put(UserController());
               Get.put(NoteController());
+              Get.put(CategoryController());
             }),
             getPages: Routes.route,
             color: AppColors.primary,
