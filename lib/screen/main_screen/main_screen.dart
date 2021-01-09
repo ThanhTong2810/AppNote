@@ -32,9 +32,9 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   final UserController userController = Get.find();
   final NoteController noteController = Get.find();
-  final CategoryController categoryController=Get.find();
+  final CategoryController categoryController = Get.find();
 
-  int length=0;
+  int length = 0;
 
   TextEditingController nameTextEditingController = new TextEditingController();
 
@@ -81,15 +81,18 @@ class _MainScreenState extends State<MainScreen> {
                                         IconButton(
                                             icon: Icon(Icons.update),
                                             onPressed: () {
-                                              noteController.isUpdate.value=true;
-                                              nameTextEditingController.text=note.name;
-                                              noteController.currentCategory.value =
-                                                  note.category;
-                                              noteController.currentPriority.value =
-                                                  note.priority;
-                                              noteController.currentStatus.value =
-                                                  note.status;
-                                              _addNoteModalBottomSheet(context,noteId: note.id);
+                                              noteController.isUpdate.value =
+                                                  true;
+                                              nameTextEditingController.text =
+                                                  note.name;
+                                              noteController.currentCategory
+                                                  .value = note.category;
+                                              noteController.currentPriority
+                                                  .value = note.priority;
+                                              noteController.currentStatus
+                                                  .value = note.status;
+                                              _addNoteModalBottomSheet(context,
+                                                  noteId: note.id);
                                             }),
                                         IconButton(
                                             icon: Icon(Icons.delete),
@@ -97,7 +100,8 @@ class _MainScreenState extends State<MainScreen> {
                                               await noteController.deleteNote(
                                                   userController.user.value,
                                                   note.id);
-                                              noteController.getNote(userController.user.value);
+                                              noteController.getNote(
+                                                  userController.user.value);
                                             })
                                       ],
                                     ),
@@ -126,8 +130,8 @@ class _MainScreenState extends State<MainScreen> {
             child: Icon(Icons.add),
             backgroundColor: AppColors.primary,
             onPressed: () {
-              noteController.isUpdate.value=false;
-              nameTextEditingController.text='';
+              noteController.isUpdate.value = false;
+              nameTextEditingController.text = '';
               nameTextEditingController.text = '';
               noteController.currentCategory.value =
                   noteController.dropDownCategory[0].value;
@@ -158,141 +162,180 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
-  void _addNoteModalBottomSheet(context,{String noteId}) {
+  void _addNoteModalBottomSheet(context, {String noteId}) {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
-          return BottomSheet(
-            onClosing: () {},
-            builder: (BuildContext context) {
-              return Obx(() {
-                return Padding(
-                  padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                  child: SingleChildScrollView(
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 5),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          TextFormField(
-                            controller: nameTextEditingController,
-                            decoration: InputDecoration(
-                              icon: Icon(Icons.add_comment_outlined),
-                              hintText: 'Enter note name',
-                            ),
-                          ),
-                          ListTile(
-                            leading: AppText(text: 'Category'),
-                            trailing: DropdownButton(
-                              hint: AppText(text: 'Select category'),
-                              value: noteController.currentCategory.value,
-                              items: noteController.dropDownCategory,
-                              onChanged: (selectedCategory) {
-                                noteController.currentCategory.value =
-                                    selectedCategory.toString();
-                              },
-                            ),
-                          ),
-                          ListTile(
-                            leading: AppText(text: 'Priority'),
-                            trailing: DropdownButton(
-                              hint: AppText(text: 'Select priority'),
-                              value: noteController.currentPriority.value,
-                              items: noteController.dropDownPriority,
-                              onChanged: (selectedPriority) {
-                                noteController.currentPriority.value =
-                                    selectedPriority.toString();
-                              },
-                            ),
-                          ),
-                          ListTile(
-                            leading: AppText(text: 'Status'),
-                            trailing: DropdownButton(
-                              hint: AppText(text: 'Select status'),
-                              value: noteController.currentStatus.value,
-                              items: noteController.dropDownStatus,
-                              onChanged: (selectedStatus) {
-                                noteController.currentStatus.value =
-                                    selectedStatus.toString();
-                              },
-                            ),
-                          ),
-                          ListTile(
-                            leading: AppText(
-                              text: 'Plan date',
-                            ),
-                            trailing: GestureDetector(
-                              child: noteController.pickedDate.value != null
-                                  ? AppText(
-                                      text:
-                                          '${formatDate(noteController.pickedDate.value)}')
-                                  : Icon(Icons.date_range_sharp),
-                              onTap: () {
-                                _pickDate();
-                              },
-                            ),
-                          ),
-                          Center(
-                            child: Padding(
-                              padding: EdgeInsets.only(bottom: 20),
-                              child: Container(
-                                child: AppButton(
-                                  noteController.isUpdate.value == false
-                                      ? FlutterLocalizations.of(context)
-                                          .getString(context, 'confirm')
-                                      : 'Edit',
-                                  onTap: noteController.isUpdate.value == false
-                                      ? () async {
-                                          Get.back();
-
-                                          await noteController.addNote(
-                                              nameTextEditingController.text,
-                                              noteController
-                                                  .currentCategory.value,
-                                              noteController
-                                                  .currentPriority.value,
-                                              noteController.currentStatus.value,
-                                              noteController.pickedDate.value,
-                                              userController.user.value);
-
-                                          noteController.getNote(userController.user.value);
-
-                                          nameTextEditingController.text = '';
-                                          noteController.currentCategory.value =
-                                              noteController.dropDownCategory[0].value;
-                                          noteController.currentPriority.value =
-                                              noteController.dropDownPriority[0].value;
-                                          noteController.currentStatus.value =
-                                              noteController.dropDownStatus[0].value;
-                                          noteController.pickedDate.value = null;
-                                        }
-                                      : () async{
-                                          Get.back();
-                                          noteController.isUpdate.value = false;
-                                          var data={
-                                            'name': nameTextEditingController.text ?? '',
-                                            'category': noteController.currentCategory.value,
-                                            'priority': noteController.currentPriority.value,
-                                            'status': noteController.currentStatus.value,
-                                            'planDate': formatDate(noteController.pickedDate.value),
-                                            'createdDate': formatDate(DateTime.now()),
-                                          };
-                                          await noteController.updateNote(userController.user.value, noteId, data);
-
-                                          noteController.getNote(userController.user.value);
-                                        },
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
+          return Obx(() {
+            return Padding(
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: SingleChildScrollView(
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 5),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      TextFormField(
+                        controller: nameTextEditingController,
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.add_comment_outlined),
+                          hintText: 'Enter note name',
+                        ),
                       ),
-                    ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 5),
+                        child: AppText(
+                          text: noteController.msgErr.value,
+                          color: AppColors.red,
+                        ),
+                      ),
+                      ListTile(
+                        leading: AppText(text: 'Category'),
+                        trailing: DropdownButton(
+                          hint: AppText(text: 'Select category'),
+                          value: noteController.currentCategory.value,
+                          items: noteController.dropDownCategory,
+                          onChanged: (selectedCategory) {
+                            noteController.currentCategory.value =
+                                selectedCategory.toString();
+                          },
+                        ),
+                      ),
+                      ListTile(
+                        leading: AppText(text: 'Priority'),
+                        trailing: DropdownButton(
+                          hint: AppText(text: 'Select priority'),
+                          value: noteController.currentPriority.value,
+                          items: noteController.dropDownPriority,
+                          onChanged: (selectedPriority) {
+                            noteController.currentPriority.value =
+                                selectedPriority.toString();
+                          },
+                        ),
+                      ),
+                      ListTile(
+                        leading: AppText(text: 'Status'),
+                        trailing: DropdownButton(
+                          hint: AppText(text: 'Select status'),
+                          value: noteController.currentStatus.value,
+                          items: noteController.dropDownStatus,
+                          onChanged: (selectedStatus) {
+                            noteController.currentStatus.value =
+                                selectedStatus.toString();
+                          },
+                        ),
+                      ),
+                      ListTile(
+                        leading: AppText(
+                          text: 'Plan date',
+                        ),
+                        trailing: GestureDetector(
+                          child: noteController.pickedDate.value != null
+                              ? AppText(
+                                  text:
+                                      '${formatDate(noteController.pickedDate.value)}')
+                              : Icon(Icons.date_range_sharp),
+                          onTap: () {
+                            _pickDate();
+                          },
+                        ),
+                      ),
+                      Center(
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: 20),
+                          child: Container(
+                            child: AppButton(
+                              noteController.isUpdate.value == false
+                                  ? FlutterLocalizations.of(context)
+                                      .getString(context, 'confirm')
+                                  : 'Edit',
+                              onTap: noteController.isUpdate.value == false
+                                  ? () async {
+                                      if (nameTextEditingController
+                                          // ignore: deprecated_member_use
+                                          .text.isNullOrBlank)
+                                        return noteController.msgErr.value =
+                                            'Please Enter Your Name Note';
+                                      if (noteController
+                                          // ignore: deprecated_member_use
+                                          .pickedDate.value.isNullOrBlank)
+                                        return noteController.msgErr.value =
+                                            'Please choose a date';
+                                      else {
+                                        Get.back();
+                                        noteController.msgErr.value = '';
+                                        await noteController.addNote(
+                                            nameTextEditingController.text,
+                                            noteController
+                                                .currentCategory.value,
+                                            noteController
+                                                .currentPriority.value,
+                                            noteController.currentStatus.value,
+                                            noteController.pickedDate.value,
+                                            userController.user.value);
+
+                                        noteController
+                                            .getNote(userController.user.value);
+
+                                        nameTextEditingController.text = '';
+                                        noteController.currentCategory.value =
+                                            noteController
+                                                .dropDownCategory[0].value;
+                                        noteController.currentPriority.value =
+                                            noteController
+                                                .dropDownPriority[0].value;
+                                        noteController.currentStatus.value =
+                                            noteController
+                                                .dropDownStatus[0].value;
+                                        noteController.pickedDate.value = null;
+                                      }
+                                    }
+                                  : () async {
+                                      if (noteController
+                                          // ignore: deprecated_member_use
+                                          .pickedDate.value.isNullOrBlank)
+                                        return noteController.msgErr.value =
+                                            'Please choose a date';
+                                      else {
+                                        Get.back();
+                                        noteController.msgErr.value = '';
+                                        noteController.isUpdate.value = false;
+                                        var data = {
+                                          'name':
+                                              nameTextEditingController.text ??
+                                                  '',
+                                          'category': noteController
+                                              .currentCategory.value,
+                                          'priority': noteController
+                                              .currentPriority.value,
+                                          'status': noteController
+                                              .currentStatus.value,
+                                          'planDate': formatDate(
+                                              noteController.pickedDate.value),
+                                          'createdDate':
+                                              formatDate(DateTime.now()),
+                                        };
+                                        await noteController.updateNote(
+                                            userController.user.value,
+                                            noteId,
+                                            data);
+
+                                        noteController
+                                            .getNote(userController.user.value);
+                                      }
+                                    },
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
                   ),
-                );
-              });
-            },
-          );
+                ),
+              ),
+            );
+          });
         });
   }
 }

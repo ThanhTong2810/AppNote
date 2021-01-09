@@ -10,6 +10,8 @@ class CategoryController extends GetxController{
   Rx<bool> isShowLoading = Rx<bool>(false);
   Rx<bool> isUpdate = Rx<bool>(false);
 
+  Rx<String> msgErr=Rx<String>('');
+
   Stream<List<Category>> getAllCategories() {
     return FirebaseHelper.fireStoreReference
         .collection(Constants.CATEGORY)

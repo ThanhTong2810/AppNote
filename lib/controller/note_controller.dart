@@ -12,6 +12,8 @@ class NoteController extends GetxController {
   Rx<String> currentPriority = Rx<String>('');
   Rx<String> currentStatus = Rx<String>('');
 
+  Rx<String> msgErr=Rx<String>('');
+
   RxList<DropdownMenuItem<String>> dropDownCategory=RxList<DropdownMenuItem<String>>([]);
   RxList<DropdownMenuItem<String>> dropDownPriority=RxList<DropdownMenuItem<String>>([]);
   RxList<DropdownMenuItem<String>> dropDownStatus=RxList<DropdownMenuItem<String>>([]);

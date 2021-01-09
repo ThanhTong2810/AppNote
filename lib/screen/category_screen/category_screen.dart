@@ -77,6 +77,13 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                     ],
                                   ),
                                   AppText(text: 'Name: ${category.name}'),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 5),
+                                    child: AppText(
+                                      text: noteController.msgErr.value,
+                                      color: AppColors.red,
+                                    ),
+                                  ),
                                   AppText(
                                       text:
                                       'Created date: ${category.createdDate}'),
@@ -139,31 +146,46 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                       : 'Edit',
                                   onTap: categoryController.isUpdate.value == false
                                       ? () async {
-                                    Get.back();
+                                    // ignore: deprecated_member_use
+                                    if(nameTextEditingController.text.isNullOrBlank)
+                                      return categoryController.msgErr.value='Please Enter Your Name Note';
+                                    // ignore: deprecated_member_use
+                                    if(noteController.pickedDate.value.isNullOrBlank)
+                                      return categoryController.msgErr.value='Please choose a date';
+                                    else{
+                                      Get.back();
+                                      categoryController.msgErr.value='';
+                                      await categoryController.addNote(nameTextEditingController.text);
 
-                                    await categoryController.addNote(nameTextEditingController.text);
+                                      nameTextEditingController.text = '';
+                                      List<String> category;
+                                      await categoryController.getCategory();
+                                      category= categoryController.listCategories.map((e) => e.name).toList();
 
-                                    nameTextEditingController.text = '';
-                                    List<String> category;
-                                    await categoryController.getCategory();
-                                    category= categoryController.listCategories.map((e) => e.name).toList();
-
-                                    noteController.dropDownCategory = RxList<DropdownMenuItem<String>>(noteController.getDropDown(category));
+                                      noteController.dropDownCategory = RxList<DropdownMenuItem<String>>(noteController.getDropDown(category));
+                                    }
                                   }
                                       : () async{
-                                    Get.back();
-                                    categoryController.isUpdate.value = false;
-                                    var data={
-                                      'name': nameTextEditingController.text ?? '',
-                                      'createdDate': formatDate(DateTime.now()),
-                                    };
-                                    await categoryController.updateCategory(noteId, data);
+                                    // ignore: deprecated_member_use
+                                    if(noteController.pickedDate.value.isNullOrBlank)
+                                      return categoryController.msgErr.value='Please choose a date';
+                                    else{
+                                      Get.back();
 
-                                    List<String> category;
-                                    await categoryController.getCategory();
-                                    category= categoryController.listCategories.map((e) => e.name).toList();
+                                      categoryController.msgErr.value='';
+                                      categoryController.isUpdate.value = false;
+                                      var data={
+                                        'name': nameTextEditingController.text ?? '',
+                                        'createdDate': formatDate(DateTime.now()),
+                                      };
+                                      await categoryController.updateCategory(noteId, data);
 
-                                    noteController.dropDownCategory = RxList<DropdownMenuItem<String>>(noteController.getDropDown(category));
+                                      List<String> category;
+                                      await categoryController.getCategory();
+                                      category= categoryController.listCategories.map((e) => e.name).toList();
+
+                                      noteController.dropDownCategory = RxList<DropdownMenuItem<String>>(noteController.getDropDown(category));
+                                    }
                                   },
                                 ),
                               ),
