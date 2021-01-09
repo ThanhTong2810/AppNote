@@ -40,11 +40,6 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   void initState() {
-    AuthHelper.onVerificationCompleted = _navigateToMainScreen;
-    AuthHelper.checkErrorBlockUser = _checkErrorExceedLimitPhoneVerify;
-    AuthHelper.onCodeSent = _navigateToVerifyPhoneNumber;
-    AuthHelper.onNewUser = _onNavigateToCollectInformationScreen;
-    AuthHelper.showAutoVerify = _showDialogAutoVerify;
     super.initState();
   }
 
@@ -58,7 +53,6 @@ class _MainScreenState extends State<MainScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                _buildCardVerifyPhone(),
                 Expanded(
                   child: StreamBuilder(
                     stream:
@@ -152,97 +146,6 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
-  Widget _buildCardVerifyPhone() {
-    return userController.user.value != null
-        ? userController.user.value.isVerifyPhone == false ||
-                // ignore: deprecated_member_use
-                userController.user.value.isVerifyPhone.isNullOrBlank
-            ? Card(
-                color: AppColors.white,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                    side: BorderSide(color: AppColors.primary)),
-                child: Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-                  child: Column(
-                    children: <Widget>[
-                      AppText(
-                          text: FlutterLocalizations.of(context)
-                              .getString(context, "verify_your_phone_number")),
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10.0),
-                        child: AppButton(
-                          FlutterLocalizations.of(context)
-                              .getString(context, 'continue'),
-                          onTap: () {
-                            AuthHelper.verifyPhoneNumber(
-                                userController.user.value.phoneNumber);
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              )
-            : Container()
-        : Container();
-  }
-
-  _navigateToMainScreen(uid) async {
-    await userController.loadUserData(uid);
-    userController.formController.reverse();
-    Get.offAll(MenuMainScreen());
-  }
-
-  _checkErrorExceedLimitPhoneVerify(String error) {
-    userController.isShowLoading.value = false;
-
-    if (error.contains('interrupted connection')) {
-      userController.msgError.value =
-          FlutterLocalizations.of(context).getString(context, 'no_connection');
-    } else if (error.contains('blocked')) {
-      userController.msgError.value = FlutterLocalizations.of(context)
-          .getString(context, 'block_phoneNumber');
-    } else if (error.contains('TOO_LONG')) {
-      userController.msgError.value = FlutterLocalizations.of(context)
-          .getString(context, 'incorret_phoneInput_long');
-    } else if (error.contains('TOO_SHORT')) {
-      userController.msgError.value = FlutterLocalizations.of(context)
-          .getString(context, 'incorret_phoneInput_short');
-    }
-  }
-
-  _navigateToVerifyPhoneNumber() async {
-    Get.toNamed('/VerifyPhoneNumberScreen',
-        arguments: '${Routes.verifyPhoneNumberScreen}'
-            '?${Constants.PHONE_NUMBER}=${userController.user.value.phoneNumber.trim()}');
-  }
-
-  _onNavigateToCollectInformationScreen(data) {
-    hideKeyboard(context);
-    userController.msgError.value = '';
-
-    userController.firebaseUser = data.user;
-    Get.offAll(CollectCustomerInformationScreen(isVerifyPhone: true));
-  }
-
-  _showDialogAutoVerify() {
-    userController.isShowLoading.value = false;
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return CupertinoAlertDialog(
-          title: Text(FlutterLocalizations.of(context)
-              .getString(context, 'auto_verify')),
-          content: Text(FlutterLocalizations.of(context)
-              .getString(context, 'auto_verify_content')),
-        );
-      },
-    );
-  }
-
   _pickDate() async {
     DateTime date = await showDatePicker(
       initialDate: DateTime.now(),
@@ -264,125 +167,126 @@ class _MainScreenState extends State<MainScreen> {
             builder: (BuildContext context) {
               return Obx(() {
                 return Padding(
-                  padding: EdgeInsets.only(
-                      bottom: MediaQuery.of(context).viewInsets.bottom),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 5),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        TextFormField(
-                          controller: nameTextEditingController,
-                          decoration: InputDecoration(
-                            icon: Icon(Icons.add_comment_outlined),
-                            hintText: 'Enter note name',
-                          ),
-                        ),
-                        ListTile(
-                          leading: AppText(text: 'Category'),
-                          trailing: DropdownButton(
-                            hint: AppText(text: 'Select category'),
-                            value: noteController.currentCategory.value,
-                            items: noteController.dropDownCategory,
-                            onChanged: (selectedCategory) {
-                              noteController.currentCategory.value =
-                                  selectedCategory.toString();
-                            },
-                          ),
-                        ),
-                        ListTile(
-                          leading: AppText(text: 'Priority'),
-                          trailing: DropdownButton(
-                            hint: AppText(text: 'Select priority'),
-                            value: noteController.currentPriority.value,
-                            items: noteController.dropDownPriority,
-                            onChanged: (selectedPriority) {
-                              noteController.currentPriority.value =
-                                  selectedPriority.toString();
-                            },
-                          ),
-                        ),
-                        ListTile(
-                          leading: AppText(text: 'Status'),
-                          trailing: DropdownButton(
-                            hint: AppText(text: 'Select status'),
-                            value: noteController.currentStatus.value,
-                            items: noteController.dropDownStatus,
-                            onChanged: (selectedStatus) {
-                              noteController.currentStatus.value =
-                                  selectedStatus.toString();
-                            },
-                          ),
-                        ),
-                        ListTile(
-                          leading: AppText(
-                            text: 'Plan date',
-                          ),
-                          trailing: GestureDetector(
-                            child: noteController.pickedDate.value != null
-                                ? AppText(
-                                    text:
-                                        '${formatDate(noteController.pickedDate.value)}')
-                                : Icon(Icons.date_range_sharp),
-                            onTap: () {
-                              _pickDate();
-                            },
-                          ),
-                        ),
-                        Center(
-                          child: Padding(
-                            padding: EdgeInsets.only(bottom: 20),
-                            child: Container(
-                              child: AppButton(
-                                noteController.isUpdate.value == false
-                                    ? FlutterLocalizations.of(context)
-                                        .getString(context, 'confirm')
-                                    : 'Edit',
-                                onTap: noteController.isUpdate.value == false
-                                    ? () async {
-                                        Get.back();
-
-                                        await noteController.addNote(
-                                            nameTextEditingController.text,
-                                            noteController
-                                                .currentCategory.value,
-                                            noteController
-                                                .currentPriority.value,
-                                            noteController.currentStatus.value,
-                                            noteController.pickedDate.value,
-                                            userController.user.value);
-
-                                        noteController.getNote(userController.user.value);
-
-                                        nameTextEditingController.text = '';
-                                        noteController.currentCategory.value =
-                                            noteController.dropDownCategory[0].value;
-                                        noteController.currentPriority.value =
-                                            noteController.dropDownPriority[0].value;
-                                        noteController.currentStatus.value =
-                                            noteController.dropDownStatus[0].value;
-                                        noteController.pickedDate.value = null;
-                                      }
-                                    : () async{
-                                        Get.back();
-                                        noteController.isUpdate.value = false;
-                                        var data={
-                                          'name': nameTextEditingController.text ?? '',
-                                          'category': noteController.currentCategory.value,
-                                          'priority': noteController.currentPriority.value,
-                                          'status': noteController.currentStatus.value,
-                                          'planDate': formatDate(noteController.pickedDate.value),
-                                          'createdDate': formatDate(DateTime.now()),
-                                        };
-                                        await noteController.updateNote(userController.user.value, noteId, data);
-
-                                        noteController.getNote(userController.user.value);
-                                      },
-                              ),
+                  padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                  child: SingleChildScrollView(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 5),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          TextFormField(
+                            controller: nameTextEditingController,
+                            decoration: InputDecoration(
+                              icon: Icon(Icons.add_comment_outlined),
+                              hintText: 'Enter note name',
                             ),
                           ),
-                        )
-                      ],
+                          ListTile(
+                            leading: AppText(text: 'Category'),
+                            trailing: DropdownButton(
+                              hint: AppText(text: 'Select category'),
+                              value: noteController.currentCategory.value,
+                              items: noteController.dropDownCategory,
+                              onChanged: (selectedCategory) {
+                                noteController.currentCategory.value =
+                                    selectedCategory.toString();
+                              },
+                            ),
+                          ),
+                          ListTile(
+                            leading: AppText(text: 'Priority'),
+                            trailing: DropdownButton(
+                              hint: AppText(text: 'Select priority'),
+                              value: noteController.currentPriority.value,
+                              items: noteController.dropDownPriority,
+                              onChanged: (selectedPriority) {
+                                noteController.currentPriority.value =
+                                    selectedPriority.toString();
+                              },
+                            ),
+                          ),
+                          ListTile(
+                            leading: AppText(text: 'Status'),
+                            trailing: DropdownButton(
+                              hint: AppText(text: 'Select status'),
+                              value: noteController.currentStatus.value,
+                              items: noteController.dropDownStatus,
+                              onChanged: (selectedStatus) {
+                                noteController.currentStatus.value =
+                                    selectedStatus.toString();
+                              },
+                            ),
+                          ),
+                          ListTile(
+                            leading: AppText(
+                              text: 'Plan date',
+                            ),
+                            trailing: GestureDetector(
+                              child: noteController.pickedDate.value != null
+                                  ? AppText(
+                                      text:
+                                          '${formatDate(noteController.pickedDate.value)}')
+                                  : Icon(Icons.date_range_sharp),
+                              onTap: () {
+                                _pickDate();
+                              },
+                            ),
+                          ),
+                          Center(
+                            child: Padding(
+                              padding: EdgeInsets.only(bottom: 20),
+                              child: Container(
+                                child: AppButton(
+                                  noteController.isUpdate.value == false
+                                      ? FlutterLocalizations.of(context)
+                                          .getString(context, 'confirm')
+                                      : 'Edit',
+                                  onTap: noteController.isUpdate.value == false
+                                      ? () async {
+                                          Get.back();
+
+                                          await noteController.addNote(
+                                              nameTextEditingController.text,
+                                              noteController
+                                                  .currentCategory.value,
+                                              noteController
+                                                  .currentPriority.value,
+                                              noteController.currentStatus.value,
+                                              noteController.pickedDate.value,
+                                              userController.user.value);
+
+                                          noteController.getNote(userController.user.value);
+
+                                          nameTextEditingController.text = '';
+                                          noteController.currentCategory.value =
+                                              noteController.dropDownCategory[0].value;
+                                          noteController.currentPriority.value =
+                                              noteController.dropDownPriority[0].value;
+                                          noteController.currentStatus.value =
+                                              noteController.dropDownStatus[0].value;
+                                          noteController.pickedDate.value = null;
+                                        }
+                                      : () async{
+                                          Get.back();
+                                          noteController.isUpdate.value = false;
+                                          var data={
+                                            'name': nameTextEditingController.text ?? '',
+                                            'category': noteController.currentCategory.value,
+                                            'priority': noteController.currentPriority.value,
+                                            'status': noteController.currentStatus.value,
+                                            'planDate': formatDate(noteController.pickedDate.value),
+                                            'createdDate': formatDate(DateTime.now()),
+                                          };
+                                          await noteController.updateNote(userController.user.value, noteId, data);
+
+                                          noteController.getNote(userController.user.value);
+                                        },
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 );

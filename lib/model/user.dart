@@ -4,15 +4,13 @@ class UserApp {
   String imgURL;
   String email;
   String facebookId;
-  bool isVerifyPhone;
 
   UserApp.fromJson(Map<dynamic, dynamic> json)
       : displayName=json['displayName']??'',
         phoneNumber = json['phoneNumber'] ?? '',
         imgURL = json['imgURL'] ?? '',
         email=json['email']??'',
-        facebookId=json['facebookId']??'',
-        isVerifyPhone=json['isVerifyPhone']??false;
+        facebookId=json['facebookId']??'';
 
 
   Map<dynamic, dynamic> toJson() => {
@@ -21,6 +19,5 @@ class UserApp {
     'imgURL': imgURL??'',
     'email':email??'',
     'facebookId':facebookId??'',
-    'isVerifyPhone':isVerifyPhone??false,
   };
 }

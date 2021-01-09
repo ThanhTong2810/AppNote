@@ -229,7 +229,6 @@ class _VerifyPhoneNumberScreenState extends State<VerifyPhoneNumberScreen>
   }
 
   _onLoginSuccess() {
-    _userController.updateVerifyPhoneTrue(_userController.user.value.phoneNumber);
     _userController.timer.cancel();
     hideKeyboard(context);
     _userController.msgError.value = "";

@@ -7,7 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async{
     WidgetsFlutterBinding.ensureInitialized();
-    SharedPreferences.setMockInitialValues({});
     await Firebase.initializeApp();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         statusBarColor: AppColors.black, statusBarBrightness: Brightness.light));

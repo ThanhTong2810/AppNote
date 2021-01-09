@@ -114,62 +114,63 @@ class _CategoryScreenState extends State<CategoryScreen> {
             builder: (BuildContext context) {
               return Obx(() {
                 return Padding(
-                  padding: EdgeInsets.only(
-                      bottom: MediaQuery.of(context).viewInsets.bottom),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 5),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        TextFormField(
-                          controller: nameTextEditingController,
-                          decoration: InputDecoration(
-                            icon: Icon(Icons.add_comment_outlined),
-                            hintText: 'Enter category name',
+                  padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                  child: SingleChildScrollView(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 5),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          TextFormField(
+                            controller: nameTextEditingController,
+                            decoration: InputDecoration(
+                              icon: Icon(Icons.add_comment_outlined),
+                              hintText: 'Enter category name',
+                            ),
                           ),
-                        ),
-                        Center(
-                          child: Padding(
-                            padding: EdgeInsets.only(bottom: 20,top: 20),
-                            child: Container(
-                              child: AppButton(
-                                categoryController.isUpdate.value == false
-                                    ? FlutterLocalizations.of(context)
-                                    .getString(context, 'confirm')
-                                    : 'Edit',
-                                onTap: categoryController.isUpdate.value == false
-                                    ? () async {
-                                  Get.back();
+                          Center(
+                            child: Padding(
+                              padding: EdgeInsets.only(bottom: 20,top: 20),
+                              child: Container(
+                                child: AppButton(
+                                  categoryController.isUpdate.value == false
+                                      ? FlutterLocalizations.of(context)
+                                      .getString(context, 'confirm')
+                                      : 'Edit',
+                                  onTap: categoryController.isUpdate.value == false
+                                      ? () async {
+                                    Get.back();
 
-                                  await categoryController.addNote(nameTextEditingController.text);
+                                    await categoryController.addNote(nameTextEditingController.text);
 
-                                  nameTextEditingController.text = '';
-                                  List<String> category;
-                                  await categoryController.getCategory();
-                                  category= categoryController.listCategories.map((e) => e.name).toList();
+                                    nameTextEditingController.text = '';
+                                    List<String> category;
+                                    await categoryController.getCategory();
+                                    category= categoryController.listCategories.map((e) => e.name).toList();
 
-                                  noteController.dropDownCategory = RxList<DropdownMenuItem<String>>(noteController.getDropDown(category));
-                                }
-                                    : () async{
-                                  Get.back();
-                                  categoryController.isUpdate.value = false;
-                                  var data={
-                                    'name': nameTextEditingController.text ?? '',
-                                    'createdDate': formatDate(DateTime.now()),
-                                  };
-                                  await categoryController.updateCategory(noteId, data);
+                                    noteController.dropDownCategory = RxList<DropdownMenuItem<String>>(noteController.getDropDown(category));
+                                  }
+                                      : () async{
+                                    Get.back();
+                                    categoryController.isUpdate.value = false;
+                                    var data={
+                                      'name': nameTextEditingController.text ?? '',
+                                      'createdDate': formatDate(DateTime.now()),
+                                    };
+                                    await categoryController.updateCategory(noteId, data);
 
-                                  List<String> category;
-                                  await categoryController.getCategory();
-                                  category= categoryController.listCategories.map((e) => e.name).toList();
+                                    List<String> category;
+                                    await categoryController.getCategory();
+                                    category= categoryController.listCategories.map((e) => e.name).toList();
 
-                                  noteController.dropDownCategory = RxList<DropdownMenuItem<String>>(noteController.getDropDown(category));
-                                },
+                                    noteController.dropDownCategory = RxList<DropdownMenuItem<String>>(noteController.getDropDown(category));
+                                  },
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 );

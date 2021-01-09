@@ -65,10 +65,6 @@ class UserController extends GetxController{
     isShowLoading.value = false;
   }
 
-  updateVerifyPhoneTrue(String phoneNumber){
-    FirebaseHelper.fireStoreReference.collection(Constants.USER_COLLECTION).doc(phoneNumber).update({'isVerifyPhone':true});
-  }
-
   resendOTP(String phoneNumber) {
     loginWithPhoneNumber(addCountryCode(phoneNumber));
   }
@@ -150,7 +146,6 @@ class UserController extends GetxController{
       "displayName": displayName ?? '',
       "imgURL": '',
       "phoneNumber": phoneNumber.trim(),
-      "isVerifyPhone": isVerifyPhone,
     });
     await loadUserData(phoneNumber);
     onCreateUserSuccess();
