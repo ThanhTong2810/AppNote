@@ -16,6 +16,7 @@ import 'package:app_note/widget/app_text.dart';
 import 'package:app_note/widget/loading_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 
 final Screen myMainScreen = Screen(
@@ -33,6 +34,7 @@ class _MainScreenState extends State<MainScreen> {
   final UserController userController = Get.find();
   final NoteController noteController = Get.find();
   final CategoryController categoryController = Get.find();
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   int length = 0;
 
@@ -41,6 +43,29 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
+    configNotification();
+  }
+
+  configNotification() async{
+    const AndroidInitializationSettings initializationSettingsAndroid =
+    AndroidInitializationSettings('logo');
+    final IOSInitializationSettings initializationSettingsIOS =
+    IOSInitializationSettings(
+        requestSoundPermission: true,
+        requestBadgePermission: true,
+        requestAlertPermission: true,
+        onDidReceiveLocalNotification: (int id, String title, String body,String payload) async{});
+    final InitializationSettings initializationSettings = InitializationSettings(
+        android: initializationSettingsAndroid,
+        iOS: initializationSettingsIOS);
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: selectNotification);
+  }
+
+  Future selectNotification(String payload) async {
+    if (payload != null) {
+      debugPrint('notification payload: $payload');
+    }
   }
 
   @override
@@ -322,7 +347,7 @@ class _MainScreenState extends State<MainScreen> {
                                             userController.user.value,
                                             noteId,
                                             data);
-
+                                        scheduleAlarm();
                                         noteController
                                             .getNote(userController.user.value);
                                       }
@@ -338,5 +363,28 @@ class _MainScreenState extends State<MainScreen> {
             );
           });
         });
+  }
+
+  void scheduleAlarm() async {
+    DateTime scheduledNotificationDateTime=DateTime.now().add(Duration(seconds: 1));
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      'note_notif',
+      'note_notif',
+      'Channel for note notification',
+      icon: 'codex_logo',
+      sound: RawResourceAndroidNotificationSound('logo'),
+      largeIcon: DrawableResourceAndroidBitmap('logo'),
+    );
+
+    var iOSPlatformChannelSpecifics = IOSNotificationDetails(
+        sound: 'a_long_cold_sting.wav',
+        presentAlert: true,
+        presentBadge: true,
+        presentSound: true);
+    var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics,iOS: iOSPlatformChannelSpecifics);
+
+    // ignore: deprecated_member_use
+    await flutterLocalNotificationsPlugin.schedule(0, 'Succeed', 'You just add a new note!!!',
+        scheduledNotificationDateTime, platformChannelSpecifics);
   }
 }

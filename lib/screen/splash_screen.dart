@@ -26,6 +26,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   final CategoryController categoryController=Get.find();
   final NoteController noteController=Get.find();
 
+
   Timer timer;
   List<String> category;
   List<String> priority = ['Slow', 'Medium', 'High'];

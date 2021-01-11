@@ -72,7 +72,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                           icon: Icon(Icons.delete),
                                           onPressed: () async {
                                             await categoryController.deleteCategory(category.id);
-                                            categoryController.getCategory();
+                                            await categoryController.getCategory();
+                                            List<String> categories;
+                                            categories= categoryController.listCategories.map((e) => e.name).toList();
+                                            noteController.dropDownCategory = RxList<DropdownMenuItem<String>>(noteController.getDropDown(categories));
                                           }),
                                     ],
                                   ),
@@ -147,9 +150,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 // ignore: deprecated_member_use
                                 if(nameTextEditingController.text.isNullOrBlank)
                                   return categoryController.msgErr.value='Please Enter Your Name Note';
-                                // ignore: deprecated_member_use
-                                if(noteController.pickedDate.value.isNullOrBlank)
-                                  return categoryController.msgErr.value='Please choose a date';
                                 else{
                                   Get.back();
                                   categoryController.msgErr.value='';
@@ -165,8 +165,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                               }
                                   : () async{
                                 // ignore: deprecated_member_use
-                                if(noteController.pickedDate.value.isNullOrBlank)
-                                  return categoryController.msgErr.value='Please choose a date';
+                                if(nameTextEditingController.text.isNullOrBlank)
+                                  return categoryController.msgErr.value='Please Enter Your Name Note';
                                 else{
                                   Get.back();
 

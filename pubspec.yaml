@@ -38,6 +38,7 @@ dependencies:
   get: ^3.15.0
   fl_chart: ^0.12.2
   http: ^0.12.2
+  flutter_local_notifications: ^3.0.3
   dio:
   flutter:
     sdk: flutter
