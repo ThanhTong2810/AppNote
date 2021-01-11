@@ -77,13 +77,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                     ],
                                   ),
                                   AppText(text: 'Name: ${category.name}'),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 5),
-                                    child: AppText(
-                                      text: noteController.msgErr.value,
-                                      color: AppColors.red,
-                                    ),
-                                  ),
                                   AppText(
                                       text:
                                       'Created date: ${category.createdDate}'),
@@ -116,89 +109,92 @@ class _CategoryScreenState extends State<CategoryScreen> {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
-          return BottomSheet(
-            onClosing: () {},
-            builder: (BuildContext context) {
-              return Obx(() {
-                return Padding(
-                  padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                  child: SingleChildScrollView(
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 5),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          TextFormField(
-                            controller: nameTextEditingController,
-                            decoration: InputDecoration(
-                              icon: Icon(Icons.add_comment_outlined),
-                              hintText: 'Enter category name',
-                            ),
-                          ),
-                          Center(
-                            child: Padding(
-                              padding: EdgeInsets.only(bottom: 20,top: 20),
-                              child: Container(
-                                child: AppButton(
-                                  categoryController.isUpdate.value == false
-                                      ? FlutterLocalizations.of(context)
-                                      .getString(context, 'confirm')
-                                      : 'Edit',
-                                  onTap: categoryController.isUpdate.value == false
-                                      ? () async {
-                                    // ignore: deprecated_member_use
-                                    if(nameTextEditingController.text.isNullOrBlank)
-                                      return categoryController.msgErr.value='Please Enter Your Name Note';
-                                    // ignore: deprecated_member_use
-                                    if(noteController.pickedDate.value.isNullOrBlank)
-                                      return categoryController.msgErr.value='Please choose a date';
-                                    else{
-                                      Get.back();
-                                      categoryController.msgErr.value='';
-                                      await categoryController.addNote(nameTextEditingController.text);
-
-                                      nameTextEditingController.text = '';
-                                      List<String> category;
-                                      await categoryController.getCategory();
-                                      category= categoryController.listCategories.map((e) => e.name).toList();
-
-                                      noteController.dropDownCategory = RxList<DropdownMenuItem<String>>(noteController.getDropDown(category));
-                                    }
-                                  }
-                                      : () async{
-                                    // ignore: deprecated_member_use
-                                    if(noteController.pickedDate.value.isNullOrBlank)
-                                      return categoryController.msgErr.value='Please choose a date';
-                                    else{
-                                      Get.back();
-
-                                      categoryController.msgErr.value='';
-                                      categoryController.isUpdate.value = false;
-                                      var data={
-                                        'name': nameTextEditingController.text ?? '',
-                                        'createdDate': formatDate(DateTime.now()),
-                                      };
-                                      await categoryController.updateCategory(noteId, data);
-
-                                      List<String> category;
-                                      await categoryController.getCategory();
-                                      category= categoryController.listCategories.map((e) => e.name).toList();
-
-                                      noteController.dropDownCategory = RxList<DropdownMenuItem<String>>(noteController.getDropDown(category));
-                                    }
-                                  },
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+          return Obx(() {
+            return Padding(
+              padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: SingleChildScrollView(
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 5),
+                  child: Wrap(
+                    children: <Widget>[
+                      TextFormField(
+                        controller: nameTextEditingController,
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.add_comment_outlined),
+                          hintText: 'Enter category name',
+                        ),
                       ),
-                    ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 5),
+                        child: Center(
+                          child: AppText(
+                            text: categoryController.msgErr.value,
+                            color: AppColors.red,
+                          ),
+                        ),
+                      ),
+                      Center(
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: 20,top: 20),
+                          child: Container(
+                            child: AppButton(
+                              categoryController.isUpdate.value == false
+                                  ? FlutterLocalizations.of(context)
+                                  .getString(context, 'confirm')
+                                  : 'Edit',
+                              onTap: categoryController.isUpdate.value == false
+                                  ? () async {
+                                // ignore: deprecated_member_use
+                                if(nameTextEditingController.text.isNullOrBlank)
+                                  return categoryController.msgErr.value='Please Enter Your Name Note';
+                                // ignore: deprecated_member_use
+                                if(noteController.pickedDate.value.isNullOrBlank)
+                                  return categoryController.msgErr.value='Please choose a date';
+                                else{
+                                  Get.back();
+                                  categoryController.msgErr.value='';
+                                  await categoryController.addNote(nameTextEditingController.text);
+
+                                  nameTextEditingController.text = '';
+                                  List<String> category;
+                                  await categoryController.getCategory();
+                                  category= categoryController.listCategories.map((e) => e.name).toList();
+
+                                  noteController.dropDownCategory = RxList<DropdownMenuItem<String>>(noteController.getDropDown(category));
+                                }
+                              }
+                                  : () async{
+                                // ignore: deprecated_member_use
+                                if(noteController.pickedDate.value.isNullOrBlank)
+                                  return categoryController.msgErr.value='Please choose a date';
+                                else{
+                                  Get.back();
+
+                                  categoryController.msgErr.value='';
+                                  categoryController.isUpdate.value = false;
+                                  var data={
+                                    'name': nameTextEditingController.text ?? '',
+                                    'createdDate': formatDate(DateTime.now()),
+                                  };
+                                  await categoryController.updateCategory(noteId, data);
+
+                                  List<String> category;
+                                  await categoryController.getCategory();
+                                  category= categoryController.listCategories.map((e) => e.name).toList();
+
+                                  noteController.dropDownCategory = RxList<DropdownMenuItem<String>>(noteController.getDropDown(category));
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                );
-              });
-            },
-          );
+                ),
+              ),
+            );
+          });
         });
   }
 }

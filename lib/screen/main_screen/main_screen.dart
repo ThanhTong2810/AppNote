@@ -56,7 +56,7 @@ class _MainScreenState extends State<MainScreen> {
                 Expanded(
                   child: StreamBuilder(
                     stream:
-                        noteController.getAllNotes(userController.user.value),
+                    noteController.getAllNotes(userController.user.value),
                     builder: (context, snapshot) {
                       if (snapshot.hasError || !snapshot.hasData)
                         return Center(
@@ -82,7 +82,7 @@ class _MainScreenState extends State<MainScreen> {
                                             icon: Icon(Icons.update),
                                             onPressed: () {
                                               noteController.isUpdate.value =
-                                                  true;
+                                              true;
                                               nameTextEditingController.text =
                                                   note.name;
                                               noteController.currentCategory
@@ -113,7 +113,7 @@ class _MainScreenState extends State<MainScreen> {
                                         text: 'Plan date: ${note.planDate}'),
                                     AppText(
                                         text:
-                                            'Created date: ${note.createdDate}'),
+                                        'Created date: ${note.createdDate}'),
                                   ],
                                 ),
                               ),
@@ -164,6 +164,7 @@ class _MainScreenState extends State<MainScreen> {
 
   void _addNoteModalBottomSheet(context, {String noteId}) {
     showModalBottomSheet(
+        isScrollControlled: true,
         context: context,
         builder: (BuildContext context) {
           return Obx(() {
@@ -173,9 +174,7 @@ class _MainScreenState extends State<MainScreen> {
               child: SingleChildScrollView(
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 5),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
+                  child: Wrap(
                     children: <Widget>[
                       TextFormField(
                         controller: nameTextEditingController,
@@ -186,9 +185,11 @@ class _MainScreenState extends State<MainScreen> {
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 5),
-                        child: AppText(
-                          text: noteController.msgErr.value,
-                          color: AppColors.red,
+                        child: Center(
+                          child: AppText(
+                            text: noteController.msgErr.value,
+                            color: AppColors.red,
+                          ),
                         ),
                       ),
                       ListTile(
