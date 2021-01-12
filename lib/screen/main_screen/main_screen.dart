@@ -19,6 +19,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 final Screen myMainScreen = Screen(
     title: 'My Main Screen',
@@ -95,6 +96,7 @@ class _MainScreenState extends State<MainScreen> {
                                                   .value = note.priority;
                                               noteController.currentStatus
                                                   .value = note.status;
+                                              noteController.pickedDate.value=DateFormat('dd/MM/yyyy').parse(note.planDate);
                                               _addNoteModalBottomSheet(context,
                                                   noteId: note.id);
                                             }),
