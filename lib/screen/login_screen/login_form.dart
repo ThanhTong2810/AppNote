@@ -7,6 +7,7 @@ import 'package:app_note/router/routes.dart';
 import 'package:app_note/screen/login_screen/collect_customer_information.dart';
 import 'package:app_note/screen/login_screen/verify_phone_number_screen.dart';
 import 'package:app_note/screen/main_screen/main_screen.dart';
+import 'package:app_note/screen/menu_screen/menu_screen.dart';
 import 'package:app_note/theme/colors.dart';
 import 'package:app_note/theme/dimens.dart';
 import 'package:app_note/utils/utils.dart';
@@ -197,7 +198,7 @@ class _LoginFormState extends State<LoginForm>  with SingleTickerProviderStateMi
   _navigateToMainScreen(uid) async {
     await userController.loadUserData(uid);
     userController.formController.reverse();
-    Get.offAll(MainScreen());
+    Get.offAll(MenuMainScreen());
   }
 
   _onNavigateToCollectInformationScreen(data) {
