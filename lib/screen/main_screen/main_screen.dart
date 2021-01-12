@@ -3,6 +3,7 @@ import 'package:app_note/constants/constants.dart';
 import 'package:app_note/controller/category_controller.dart';
 import 'package:app_note/controller/note_controller.dart';
 import 'package:app_note/controller/user_controller.dart';
+import 'package:app_note/helper/notification_helper.dart';
 import 'package:app_note/localization/flutter_localizations.dart';
 import 'package:app_note/model/note.dart';
 import 'package:app_note/router/routes.dart';
@@ -34,7 +35,6 @@ class _MainScreenState extends State<MainScreen> {
   final UserController userController = Get.find();
   final NoteController noteController = Get.find();
   final CategoryController categoryController = Get.find();
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   int length = 0;
 
@@ -43,30 +43,9 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    configNotification();
   }
 
-  configNotification() async{
-    const AndroidInitializationSettings initializationSettingsAndroid =
-    AndroidInitializationSettings('logo');
-    final IOSInitializationSettings initializationSettingsIOS =
-    IOSInitializationSettings(
-        requestSoundPermission: true,
-        requestBadgePermission: true,
-        requestAlertPermission: true,
-        onDidReceiveLocalNotification: (int id, String title, String body,String payload) async{});
-    final InitializationSettings initializationSettings = InitializationSettings(
-        android: initializationSettingsAndroid,
-        iOS: initializationSettingsIOS);
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: selectNotification);
-  }
 
-  Future selectNotification(String payload) async {
-    if (payload != null) {
-      debugPrint('notification payload: $payload');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -125,6 +104,7 @@ class _MainScreenState extends State<MainScreen> {
                                               await noteController.deleteNote(
                                                   userController.user.value,
                                                   note.id);
+                                              NotificationHelper.scheduleAlarm('Deleted Note: ${note.name}');
                                               noteController.getNote(
                                                   userController.user.value);
                                             })
@@ -178,7 +158,7 @@ class _MainScreenState extends State<MainScreen> {
   _pickDate() async {
     DateTime date = await showDatePicker(
       initialDate: DateTime.now(),
-      firstDate: DateTime(DateTime.now().year - 50),
+      firstDate: DateTime(DateTime.now().year),
       lastDate: DateTime(DateTime.now().year + 50),
       context: context,
     );
@@ -302,6 +282,7 @@ class _MainScreenState extends State<MainScreen> {
                                             noteController.pickedDate.value,
                                             userController.user.value);
 
+                                        NotificationHelper.scheduleAlarm('Add note succeed');
                                         noteController
                                             .getNote(userController.user.value);
 
@@ -340,14 +321,12 @@ class _MainScreenState extends State<MainScreen> {
                                               .currentStatus.value,
                                           'planDate': formatDate(
                                               noteController.pickedDate.value),
-                                          'createdDate':
-                                              formatDate(DateTime.now()),
                                         };
                                         await noteController.updateNote(
                                             userController.user.value,
                                             noteId,
                                             data);
-                                        scheduleAlarm();
+                                        NotificationHelper.scheduleAlarm('Update note succeed');
                                         noteController
                                             .getNote(userController.user.value);
                                       }
@@ -363,28 +342,5 @@ class _MainScreenState extends State<MainScreen> {
             );
           });
         });
-  }
-
-  void scheduleAlarm() async {
-    DateTime scheduledNotificationDateTime=DateTime.now().add(Duration(seconds: 1));
-    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      'note_notif',
-      'note_notif',
-      'Channel for note notification',
-      icon: 'codex_logo',
-      sound: RawResourceAndroidNotificationSound('logo'),
-      largeIcon: DrawableResourceAndroidBitmap('logo'),
-    );
-
-    var iOSPlatformChannelSpecifics = IOSNotificationDetails(
-        sound: 'a_long_cold_sting.wav',
-        presentAlert: true,
-        presentBadge: true,
-        presentSound: true);
-    var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics,iOS: iOSPlatformChannelSpecifics);
-
-    // ignore: deprecated_member_use
-    await flutterLocalNotificationsPlugin.schedule(0, 'Succeed', 'You just add a new note!!!',
-        scheduledNotificationDateTime, platformChannelSpecifics);
   }
 }
