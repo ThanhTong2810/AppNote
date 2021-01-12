@@ -47,4 +47,25 @@ class NotificationHelper{
     await flutterLocalNotificationsPlugin.schedule(0, 'SUCCEED!!!', content,
         scheduledNotificationDateTime, platformChannelSpecifics);
   }
+
+  static void dailyAlarm() async {
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      'note_notif',
+      'note_notif',
+      'Channel for note notification',
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+
+    var iOSPlatformChannelSpecifics = IOSNotificationDetails(
+        sound: 'a_long_cold_sting.wav',
+        presentAlert: true,
+        presentBadge: true,
+        presentSound: true);
+    var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics,iOS: iOSPlatformChannelSpecifics);
+
+    // ignore: deprecated_member_use
+    await flutterLocalNotificationsPlugin.showDailyAtTime(1, 'Did you Check the News Today?', 'Check your notes here!!!',
+        Time(15,0,0), platformChannelSpecifics);
+  }
 }

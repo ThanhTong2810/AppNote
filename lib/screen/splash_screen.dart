@@ -40,6 +40,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   void initState() {
     super.initState();
     onWidgetBuildDone(onBuildDone);
+    NotificationHelper.dailyAlarm();
   }
 
   @override
