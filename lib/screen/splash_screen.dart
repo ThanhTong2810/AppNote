@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:app_note/controller/category_controller.dart';
 import 'package:app_note/controller/note_controller.dart';
 import 'package:app_note/controller/user_controller.dart';
+import 'package:app_note/helper/notification_helper.dart';
 import 'package:app_note/helper/shared_preferences_helper.dart';
 import 'package:app_note/model/user.dart';
 import 'package:app_note/res/images/images.dart';
@@ -88,6 +89,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
     timer=Timer.periodic(Duration(seconds: 2), (timer) async {
       await _loadUserData();
+      NotificationHelper.configNotification();
       // ignore: deprecated_member_use
       if (userController.user.value.isNullOrBlank) {
         _navigateToLoginScreen();

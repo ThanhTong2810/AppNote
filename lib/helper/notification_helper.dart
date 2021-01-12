@@ -6,7 +6,7 @@ class NotificationHelper{
 
   static configNotification() async{
     const AndroidInitializationSettings initializationSettingsAndroid =
-    AndroidInitializationSettings('logo');
+    AndroidInitializationSettings('@mipmap/ic_launcher');
     final IOSInitializationSettings initializationSettingsIOS =
     IOSInitializationSettings(
         requestSoundPermission: true,
@@ -32,9 +32,8 @@ class NotificationHelper{
       'note_notif',
       'note_notif',
       'Channel for note notification',
-      icon: 'codex_logo',
-      sound: RawResourceAndroidNotificationSound('logo'),
-      largeIcon: DrawableResourceAndroidBitmap('logo'),
+      importance: Importance.max,
+      priority: Priority.high,
     );
 
     var iOSPlatformChannelSpecifics = IOSNotificationDetails(
