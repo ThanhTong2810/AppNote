@@ -243,8 +243,8 @@ class _MainScreenState extends State<MainScreen> {
                           child: noteController.pickedDate.value != null
                               ? AppText(
                                   text:
-                                      '${formatDate(noteController.pickedDate.value)}')
-                              : Icon(Icons.date_range_sharp),
+                                      '${formatDate(noteController.pickedDate.value)}',color: AppColors.black,)
+                              : Icon(Icons.date_range_sharp,color: AppColors.black,),
                           onTap: () {
                             _pickDate();
                           },
