@@ -106,7 +106,7 @@ class _MainScreenState extends State<MainScreen> {
                                               await noteController.deleteNote(
                                                   userController.user.value,
                                                   note.id);
-                                              NotificationHelper.scheduleAlarm('Deleted Note: ${note.name}');
+                                              NotificationHelper.eventAlarm('Deleted Note: ${note.name}');
                                               noteController.getNote(
                                                   userController.user.value);
                                             })
@@ -284,7 +284,10 @@ class _MainScreenState extends State<MainScreen> {
                                             noteController.pickedDate.value,
                                             userController.user.value);
 
-                                        NotificationHelper.scheduleAlarm('Add note succeed');
+                                        NotificationHelper.eventAlarm('Add note succeed');
+
+                                        NotificationHelper.scheduleAlarm(noteController.pickedDate.value, '${nameTextEditingController.text}');
+
                                         noteController
                                             .getNote(userController.user.value);
 
@@ -328,7 +331,7 @@ class _MainScreenState extends State<MainScreen> {
                                             userController.user.value,
                                             noteId,
                                             data);
-                                        NotificationHelper.scheduleAlarm('Update note succeed');
+                                        NotificationHelper.eventAlarm('Update note succeed');
                                         noteController
                                             .getNote(userController.user.value);
                                       }
