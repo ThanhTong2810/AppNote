@@ -286,8 +286,6 @@ class _MainScreenState extends State<MainScreen> {
 
                                         NotificationHelper.eventAlarm('Add note succeed');
 
-                                        NotificationHelper.scheduleAlarm(noteController.pickedDate.value, '${nameTextEditingController.text}');
-
                                         noteController
                                             .getNote(userController.user.value);
 

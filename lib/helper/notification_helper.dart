@@ -71,7 +71,7 @@ class NotificationHelper{
         Time(16,0,0), platformChannelSpecifics);
   }
 
-  static void scheduleAlarm(DateTime date,String content) async {
+  static void scheduleAlarm(DateTime date,int id,String content) async {
     int scheduleDate=date.millisecondsSinceEpoch-DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day).millisecondsSinceEpoch+300000;
     DateTime scheduledNotificationDateTime=DateTime.now().add(Duration(milliseconds: scheduleDate));
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
@@ -90,7 +90,7 @@ class NotificationHelper{
     var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics,iOS: iOSPlatformChannelSpecifics);
 
     // ignore: deprecated_member_use
-    await flutterLocalNotificationsPlugin.schedule(3, 'WARNING!!!', content,
+    await flutterLocalNotificationsPlugin.schedule(id, 'WARNING!!!', content,
         scheduledNotificationDateTime, platformChannelSpecifics);
   }
 }

@@ -1,5 +1,6 @@
 import 'package:app_note/constants/constants.dart';
 import 'package:app_note/helper/firebase_helper.dart';
+import 'package:app_note/helper/notification_helper.dart';
 import 'package:app_note/model/note.dart';
 import 'package:app_note/model/user.dart';
 import 'package:app_note/utils/utils.dart';
@@ -71,6 +72,8 @@ class NoteController extends GetxController {
         .doc(noteId)
         .update({'id': noteId.trim()});
     listNotes.add(Note.fromJson(noteData));
+    NotificationHelper.scheduleAlarm(planDate,noteId.hashCode, '$name');
+
     isShowLoading.value = false;
   }
 
