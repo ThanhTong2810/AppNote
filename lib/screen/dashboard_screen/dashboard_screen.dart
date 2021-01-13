@@ -119,7 +119,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
           return PieChartSectionData(
             color: AppColors.clickableText,
             value: ((noteController.doneLength.value/noteController.listNotes.length)*100).roundToDouble(),
-            title: '${((noteController.doneLength.value/noteController.listNotes.length)*100).roundToDouble()}%',
+            title: '${((noteController.doneLength.value/noteController.listNotes.length)*100).roundToDouble()==0.0?'':((noteController.doneLength.value/noteController.listNotes.length)*100).roundToDouble()}%',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
@@ -128,7 +128,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
           return PieChartSectionData(
             color: AppColors.yellow,
             value: ((noteController.processingLength.value/noteController.listNotes.length)*100).roundToDouble(),
-            title: '${((noteController.processingLength.value/noteController.listNotes.length)*100).roundToDouble()}%',
+            title: '${((noteController.processingLength.value/noteController.listNotes.length)*100).roundToDouble()==0.0?'':'${((noteController.processingLength.value/noteController.listNotes.length)*100).roundToDouble()}%'}',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
@@ -137,7 +137,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
           return PieChartSectionData(
             color: AppColors.red,
             value: ((noteController.pendingLength.value/noteController.listNotes.length)*100).roundToDouble(),
-            title: '${((noteController.pendingLength.value/noteController.listNotes.length)*100).roundToDouble()}%',
+            title: '${((noteController.pendingLength.value/noteController.listNotes.length)*100).roundToDouble()==0.0?'':'${((noteController.pendingLength.value/noteController.listNotes.length)*100).roundToDouble()}%'}',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
